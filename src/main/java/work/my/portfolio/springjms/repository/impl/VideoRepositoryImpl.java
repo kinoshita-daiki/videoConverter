@@ -20,7 +20,7 @@ import work.my.portfolio.springjms.model.VideoMeta;
 import work.my.portfolio.springjms.repository.VideoRepository;
 
 @Repository
-class VideoRepositoryImpl implements VideoRepository {
+public class VideoRepositoryImpl implements VideoRepository {
 
 	private final JdbcTemplate jdbcTemplate;
 
@@ -31,7 +31,7 @@ class VideoRepositoryImpl implements VideoRepository {
 	private final String urlShortnerUri;
 
 	@Autowired
-	VideoRepositoryImpl(JdbcTemplate jdbcTemplate,
+	public VideoRepositoryImpl(JdbcTemplate jdbcTemplate,
 			NamedParameterJdbcTemplate namedParameterJdbcTemplate, MailSender mailSender,
 			@Value("${my.url.shortner}") String urlShortnerUri) {
 		this.jdbcTemplate = jdbcTemplate;
