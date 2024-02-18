@@ -14,6 +14,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
+permissions:
+    contents: read
+    checks: write
+    id-token: write
 jobs:
   jobId1:
     runs-on: ubuntu-latest
