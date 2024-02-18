@@ -32,3 +32,8 @@ jobs:
       run: ./mvnw -B compile
     - name: Test
       run: ./mvnw -B test
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v4.1.0
+      if: always()
+      with:
+        report_paths: 'target/surefire-reports/TEST-*.xml'
