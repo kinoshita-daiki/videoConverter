@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+env:
+  APPLICATION_PORT: 8090
+  PROJECT_DIRECTORY: videoConverter
+  PRODUCTION_BRANCH: master
+  JAR_FILE_NAME: springjms-0.0.1-SNAPSHOT.jar
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }} # ホスト名
+          username: ${{ secrets.SSH_USERNAME }} # SSH ユーザ名
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # 秘密鍵の内容
+          port: ${{ secrets.SSH_PORT }} # ポート番号
+          script: |
+            cd ${{ env.PROJECT_DIRECTORY }}
+            chmod +x mvnw
+            git switch ${{ env.PRODUCTION_BRANCH }}
+            git pull
+            kill $(lsof -ti:${{ env.APPLICATION_PORT }})
+            sleep 10;mvn -B clean
+            ./mvnw -B package
+            (nohup java -jar target/${{ env.JAR_FILE_NAME }} > /dev/null 2>&1 &)
