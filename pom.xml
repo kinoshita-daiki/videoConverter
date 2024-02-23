@@ -13,7 +13,7 @@
 	<artifactId>springjms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springjms</name>
-	<description>Demo project for Spring Boot</description>
+	<description>videoConverter back</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
