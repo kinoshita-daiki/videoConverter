@@ -6,7 +6,6 @@ env:
   APPLICATION_PORT: 8090
   PROJECT_DIRECTORY: videoConverter
   PRODUCTION_BRANCH: master
-  JAR_FILE_NAME: springjms-0.0.1-SNAPSHOT.jar
 
 jobs:
   deploy:
@@ -27,4 +26,4 @@ jobs:
             kill $(lsof -ti:${{ env.APPLICATION_PORT }})
             sleep 10;mvn -B clean
             ./mvnw -B package
-            (nohup java -Dspring.profiles.active=prod -jar target/*.jar > /dev/null 2>&1 &)
+            (nohup java -Dspring.profiles.active=prod -jar target/*.jar &)
