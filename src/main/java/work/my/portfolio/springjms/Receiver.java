@@ -49,9 +49,9 @@ class Receiver {
 
 				// 整合性を保つ必要がないため、トランザクション不要
 				service.postVideoMetaData(videoMessage.fileName(), outputFileName, expiredDateTime);
-//				service.sendMail(videoMessage.email(),
-//						videoMessage.fileName(),
-//						expiredDateTime);
+				service.sendMail(videoMessage.email(),
+						videoMessage.fileName(),
+						expiredDateTime);
 				Files.deleteIfExists(originalPath);
 				service.deleteClientVideo(videoPath.getUri(), fileName);
 			} catch (Exception e) {
