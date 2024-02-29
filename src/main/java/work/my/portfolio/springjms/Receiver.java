@@ -56,7 +56,6 @@ class Receiver {
 				service.deleteClientVideo(videoPath.getUri(), fileName);
 			} catch (Exception e) {
 				log.error("jms error", e);
-				e.printStackTrace();
 				try {
 					// メッセージの再配信を防ぐため確認させる(配信保障が不要)
 					messasge.acknowledge();
