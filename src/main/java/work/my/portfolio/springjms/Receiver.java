@@ -34,14 +34,11 @@ class Receiver {
 
 	@JmsListener(destination = "${jms.destination}", containerFactory = "getFactory", concurrency = "2")
 	void receiveMessage(Message messasge) {
-		log.info("recive");
 		if (messasge instanceof TextMessage) {
 			TextMessage textMessage = (TextMessage) messasge;
-			log.info("textMessage");
 			try {
 				VideoMessage videoMessage = mapper.readValue(textMessage.getText(), VideoMessage.class);
 
-				log.info("mapped");
 				String fileName = videoMessage.fileName();
 				Path fileFromClientPath = new File(videoPath.getOrigin() + fileName)
 						.toPath();
@@ -50,15 +47,12 @@ class Receiver {
 				String outputFileName = service.convert(videoMessage, originalPath.toString());
 				LocalDateTime expiredDateTime = service.getDownloadTimeLimit();
 
-				log.info("post");
 				// 整合性を保つ必要がないため、トランザクション不要
 				service.postVideoMetaData(videoMessage.fileName(), outputFileName, expiredDateTime);
-				log.info("sendMail");
-				service.sendMail(videoMessage.email(),
-						videoMessage.fileName(),
-						expiredDateTime);
+//				service.sendMail(videoMessage.email(),
+//						videoMessage.fileName(),
+//						expiredDateTime);
 				Files.deleteIfExists(originalPath);
-				log.info("delete");
 				service.deleteClientVideo(videoPath.getUri(), fileName);
 			} catch (Exception e) {
 				log.error("jms error", e);
