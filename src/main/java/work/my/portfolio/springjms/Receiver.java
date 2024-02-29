@@ -16,10 +16,12 @@ import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import work.my.portfolio.springjms.messages.VideoMessage;
 import work.my.portfolio.springjms.path.VideoPath;
 import work.my.portfolio.springjms.service.VideoService;
 
+@Log4j2
 @RequiredArgsConstructor(onConstructor_ = { @Autowired }, access = AccessLevel.PACKAGE)
 @Component
 class Receiver {
@@ -53,12 +55,13 @@ class Receiver {
 				Files.deleteIfExists(originalPath);
 				service.deleteClientVideo(videoPath.getUri(), fileName);
 			} catch (Exception e) {
+				log.error("jms error", e);
 				e.printStackTrace();
 				try {
 					// メッセージの再配信を防ぐため確認させる(配信保障が不要)
 					messasge.acknowledge();
 				} catch (JMSException e1) {
-					e1.printStackTrace();
+					log.error("message acknowledge fails", e1.getCause());
 					return;
 				}
 			}
@@ -66,7 +69,7 @@ class Receiver {
 		try {
 			messasge.acknowledge();
 		} catch (JMSException e) {
-			e.printStackTrace();
+			log.error("message acknowledge fails", e.getCause());
 		}
 	}
 }

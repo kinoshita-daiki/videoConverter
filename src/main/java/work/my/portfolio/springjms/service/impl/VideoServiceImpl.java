@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
+import lombok.extern.log4j.Log4j2;
 import work.my.portfolio.springjms.messages.VideoMessage;
 import work.my.portfolio.springjms.model.VideoMeta;
 import work.my.portfolio.springjms.path.FFmpegPath;
@@ -21,6 +22,7 @@ import work.my.portfolio.springjms.path.VideoPath;
 import work.my.portfolio.springjms.repository.VideoRepository;
 import work.my.portfolio.springjms.service.VideoService;
 
+@Log4j2
 @Service
 class VideoServiceImpl implements VideoService {
 
@@ -136,7 +138,7 @@ class VideoServiceImpl implements VideoService {
 					try {
 						Files.deleteIfExists(t);
 					} catch (IOException e) {
-						e.printStackTrace();
+						log.error("the file does not exist for deleting", e);
 					}
 				});
 	}
