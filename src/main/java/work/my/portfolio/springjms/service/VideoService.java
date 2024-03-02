@@ -20,7 +20,7 @@ public interface VideoService {
 	 * @param videoMessage メッセージ
 	 * @param originalPath 入力元動画のパス
 	 * @throws IOException 変換エラー時に投げる
-	 * @returm 変換動画出力先
+	 * @return 変換動画出力先
 	 */
 	String convert(VideoMessage videoMessage, String originalPath) throws IOException;
 
