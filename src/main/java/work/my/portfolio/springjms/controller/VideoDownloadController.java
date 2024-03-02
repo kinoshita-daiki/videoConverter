@@ -25,6 +25,12 @@ import work.my.portfolio.springjms.model.VideoMeta;
 import work.my.portfolio.springjms.path.VideoPath;
 import work.my.portfolio.springjms.service.VideoService;
 
+/**
+ * 動画ダウンロードコントローラ
+ * 
+ * @author kinoshita daiki
+ * @since 2024/03/02
+ */
 @RequiredArgsConstructor(onConstructor_ = { @Autowired }, access = AccessLevel.PACKAGE)
 @RestController
 public class VideoDownloadController {
@@ -33,6 +39,12 @@ public class VideoDownloadController {
 
 	private final VideoService service;
 
+	/**
+	 * 動画をダウンロードする
+	 * 
+	 * @param fileName ファイル名
+	 * @return 動画
+	 */
 	@GetMapping("/videoDownload")
 	public ResponseEntity<Resource> downloadVideo(@RequestParam String fileName) {
 		File uploadedFile = new File(videoPath.getConverted() + fileName);
@@ -55,6 +67,12 @@ public class VideoDownloadController {
 		}
 	}
 
+	/**
+	 * ダウンロード画面用メタデータを取得する
+	 * 
+	 * @param fileName ファイル名
+	 * @return メタデータ
+	 */
 	@GetMapping("/videoDownloadView")
 	public DownloadViewMetaData getVideoDownloadView(@RequestParam String fileName) {
 		VideoMeta downloadModel = service.findMetaData(fileName);
@@ -69,11 +87,19 @@ public class VideoDownloadController {
 	private static record DownloadViewMetaData(String viewName, String fileName, LocalDateTime expiredDateTime) {
 	}
 
+	/**
+	 * 期日切れ画面を表示する
+	 * 
+	 * @return 期日切れ画面
+	 */
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public String displayNoDataErrorPage() {
 		return "expiredView";
 	}
 
+	/**
+	 * @return 汎用エラーページ
+	 */
 	@ExceptionHandler(Throwable.class)
 	public String displayCommonErrorPage() {
 		return "commonErrorPage";

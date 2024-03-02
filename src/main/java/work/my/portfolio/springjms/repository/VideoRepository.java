@@ -5,6 +5,12 @@ import java.util.List;
 
 import work.my.portfolio.springjms.model.VideoMeta;
 
+/**
+ * 動画変換repository
+ * 
+ * @author kinoshita daiki
+ * @since 2024/03/02
+ */
 public interface VideoRepository {
 
 	/**

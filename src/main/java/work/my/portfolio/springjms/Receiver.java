@@ -22,6 +22,12 @@ import work.my.portfolio.springjms.messages.VideoMessage;
 import work.my.portfolio.springjms.path.VideoPath;
 import work.my.portfolio.springjms.service.VideoService;
 
+/**
+ * レシーバー
+ * 
+ * @author kinoshita daiki
+ * @since 2024/03/02
+ */
 @Log4j2
 @RequiredArgsConstructor(onConstructor_ = { @Autowired }, access = AccessLevel.PACKAGE)
 @Component
@@ -33,6 +39,11 @@ class Receiver {
 
 	private final VideoPath videoPath;
 
+	/**
+	 * メッセージを受け取る
+	 * 
+	 * @param messasge メッセージ
+	 */
 	@JmsListener(destination = "${jms.destination}", containerFactory = "getFactory", concurrency = "2")
 	void receiveMessage(Message messasge) {
 		if (messasge instanceof TextMessage) {

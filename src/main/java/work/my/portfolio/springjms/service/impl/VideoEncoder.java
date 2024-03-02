@@ -9,6 +9,12 @@ import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 
+/**
+ * 動画変換
+ * 
+ * @author kinoshita daiki
+ * @since 2024/03/02
+ */
 @Builder
 class VideoEncoder {
 
@@ -28,6 +34,11 @@ class VideoEncoder {
 
 	private final String pathToFFprobe;
 
+	/**
+	 * 動画変換する
+	 * 
+	 * @throws IOException 変換失敗時
+	 */
 	public void encodeVideo() throws IOException {
 		FFmpeg ffmpeg = new FFmpeg(pathToFFmpeg);
 		FFprobe ffprobe = new FFprobe(pathToFFprobe);

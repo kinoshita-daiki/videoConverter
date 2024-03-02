@@ -6,6 +6,12 @@ import java.time.LocalDateTime;
 import work.my.portfolio.springjms.messages.VideoMessage;
 import work.my.portfolio.springjms.model.VideoMeta;
 
+/**
+ * 動画変換Service
+ * 
+ * @author kinoshita daiki
+ * @since 2024/03/02
+ */
 public interface VideoService {
 
 	/**
