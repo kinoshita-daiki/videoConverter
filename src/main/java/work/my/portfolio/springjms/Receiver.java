@@ -1,6 +1,7 @@
 package work.my.portfolio.springjms;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -36,13 +37,15 @@ class Receiver {
 	void receiveMessage(Message messasge) {
 		if (messasge instanceof TextMessage) {
 			TextMessage textMessage = (TextMessage) messasge;
+			Path originalPath = null;
+			String fileName = null;
 			try {
 				VideoMessage videoMessage = mapper.readValue(textMessage.getText(), VideoMessage.class);
 
-				String fileName = videoMessage.fileName();
+				fileName = videoMessage.fileName();
 				Path fileFromClientPath = new File(videoPath.getOrigin() + fileName)
 						.toPath();
-				Path originalPath = Files.write(fileFromClientPath, service.getVideo(videoPath.getUri(), fileName));
+				originalPath = Files.write(fileFromClientPath, service.getVideo(videoPath.getUri(), fileName));
 
 				String outputFileName = service.convert(videoMessage, originalPath.toString());
 				LocalDateTime expiredDateTime = service.getDownloadTimeLimit();
@@ -52,23 +55,26 @@ class Receiver {
 				service.sendMail(videoMessage.email(),
 						videoMessage.fileName(),
 						expiredDateTime);
-				Files.deleteIfExists(originalPath);
-				service.deleteClientVideo(videoPath.getUri(), fileName);
 			} catch (Exception e) {
 				log.error("jms error", e);
+			} finally {
 				try {
-					// メッセージの再配信を防ぐため確認させる(配信保障が不要)
-					messasge.acknowledge();
-				} catch (JMSException e1) {
-					log.error("message acknowledge fails", e1.getCause());
-					return;
+					deleteClientVideo(originalPath, fileName);
+				} catch (IOException e) {
+					log.error("client video delete error", e);
 				}
 			}
+
 		}
 		try {
 			messasge.acknowledge();
 		} catch (JMSException e) {
 			log.error("message acknowledge fails", e.getCause());
 		}
+	}
+
+	private void deleteClientVideo(Path originalPath, String fileName) throws IOException {
+		Files.deleteIfExists(originalPath);
+		service.deleteClientVideo(videoPath.getUri(), fileName);
 	}
 }
