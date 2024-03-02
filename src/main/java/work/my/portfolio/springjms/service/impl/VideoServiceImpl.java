@@ -94,10 +94,11 @@ class VideoServiceImpl implements VideoService {
 				"", //
 				repository.getShortUrl(originalUrl), //
 				"", //
-				"ダウンロード期限は " + toDateTimeForMail(expiredDateTime) + "までです。", //
+				"ダウンロード保障期限は " + toDateTimeForMail(expiredDateTime) + "までです。", //
+				"上記期限を過ぎるとダウンロードできなくなる可能性があります。",
 				"", //
 				"※ 注意！このアプリはポートフォリオ用です。動作保証はいたしかねます。", //
-				"※ またこのメールには返信できません。何かありましたら、Github等から連絡をお願いします。"//
+				"※ またこのメールには返信できません。何かありましたら、info@kinoshitadaiki.workから連絡をお願いします。"//
 		);
 	}
 
@@ -116,7 +117,7 @@ class VideoServiceImpl implements VideoService {
 
 	@Override
 	public LocalDateTime getDownloadTimeLimit() {
-		// 変換完了時刻を1時間単位で切り上げ、削除スケジュールは毎時間、2時間前の時刻の動画を削除する。DBのカラムに変換完了時刻を入れておく
+		// 変換完了時刻を1時間単位で切り上げ、削除スケジュールは毎時間、2時間前の時刻の動画を削除する。
 		// 例：18:00 ＝＞ 20時にスケジュールで削除、18:59＝＞20時に削除、19:00＝＞21時にスケジュールで削除
 		var now = LocalDateTime.now();
 		int hour = now.plusHours(Long.parseLong(downloadTimeLimitTermSetting)).getHour();
@@ -138,7 +139,7 @@ class VideoServiceImpl implements VideoService {
 					try {
 						Files.deleteIfExists(t);
 					} catch (IOException e) {
-						log.error("the file does not exist for deleting", e);
+						log.error("the file to delete does not exist", e);
 					}
 				});
 	}
